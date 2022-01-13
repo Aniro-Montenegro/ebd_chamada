@@ -1,11 +1,14 @@
 import 'package:ebd_chamada/config/padrao-cores.dart';
 import 'package:ebd_chamada/modelos/aula.dart';
 import 'package:ebd_chamada/modelos/boxes-aulas.dart';
+import 'package:ebd_chamada/modelos/boxes-igreja.dart';
+import 'package:ebd_chamada/modelos/igreja.dart';
 import 'package:ebd_chamada/paginas/ChamadaPage.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:share_files_and_screenshot_widgets/share_files_and_screenshot_widgets.dart';
 
 
 enum OrderOptions {orderaz, orderza}
@@ -19,7 +22,21 @@ class AulasPage extends StatefulWidget {
 
 class _AulasPageState extends State<AulasPage> {
 
+
+
+
   final DateFormat dataFormatada = DateFormat('dd/MM/yyyy');
+  String ordenacao= "z-a";
+
+  final box= BoxesIgrejas.getTransactions();
+  Igreja igreja =Igreja.buildIgreja();
+
+  @override
+  void initState() {
+    box.values.toList().length>0 ? igreja=box.values.toList().first:igreja=Igreja.buildIgreja();
+    super.initState();
+  }
+
 
   List<Aula> aulas = [];
   @override
@@ -36,15 +53,15 @@ class _AulasPageState extends State<AulasPage> {
       backgroundColor: PadraoCores.gradiente1_1,
           centerTitle: true,
           actions: <Widget>[
-            PopupMenuButton<OrderOptions>(
-              itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
-                 PopupMenuItem<OrderOptions>(
+            PopupMenuButton<String>(
+              itemBuilder: (context) => <PopupMenuEntry<String>>[
+                 PopupMenuItem<String>(
                   child: Text("Ordenar de A-Z",style: TextStyle(color: PadraoCores.texto_1),),
-                  value: OrderOptions.orderaz,
+                  value: "a-z",
                 ),
-                 PopupMenuItem<OrderOptions>(
+                 PopupMenuItem<String>(
                   child: Text("Ordenar de Z-A",style: TextStyle(color: PadraoCores.texto_1),),
-                  value: OrderOptions.orderza,
+                  value: "z-a",
                 ),
               ],
               onSelected: _orderList,
@@ -66,8 +83,14 @@ class _AulasPageState extends State<AulasPage> {
             final alunosLista=box.values.toList().cast<Aula>();
 
             aulas=alunosLista;
+            if(ordenacao=="a-z"){
+              ordenarListaAz();
+            }
+            else{
+              ordenarListaZa();
+            }
 
-            print(alunosLista);
+
 
 
             return buildContent(context);
@@ -141,182 +164,215 @@ class _AulasPageState extends State<AulasPage> {
     );
   }
   Widget _contactCardTable(BuildContext context, int index){
-
+    GlobalKey previewContainer = new GlobalKey();
+    int originalSize = 800;
+    Image image;
     return GestureDetector(
-      child: Card(
-        color: PadraoCores.cards_1,
-        child: Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Container(
-            color: Colors.transparent,
+      child: RepaintBoundary(
+        key: previewContainer,
+        child: Container(
+          child: Card(
+            color: PadraoCores.cards_1,
+            shape:RoundedRectangleBorder(
+              side: BorderSide(color: Colors.white70, width: 1),
+              borderRadius: BorderRadius.circular(10),),
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Container(
+                color: Colors.transparent,
 
-            child: Table(
-              border: TableBorder.all(color: PadraoCores.texto_2),
-              children: [
-                TableRow(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Data ",
-                      style: TextStyle(fontSize: 22.0,
-                          fontWeight: FontWeight.bold,color: PadraoCores.texto_2),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(igreja.nomeIgreja,style: TextStyle(color: PadraoCores.texto_1,fontSize: 20),),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(dataFormatada.format(aulas[index].data),
-                        style: TextStyle(fontSize: 22.0,
-                            fontWeight: FontWeight.bold,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
+                    Table(
+                      border: TableBorder.all(color: PadraoCores.texto_2),
+                      children: [
+                        TableRow(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Data ",
+                              style: TextStyle(fontSize: 22.0,
+                                  fontWeight: FontWeight.bold,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(dataFormatada.format(aulas[index].data),
+                                style: TextStyle(fontSize: 22.0,
+                                    fontWeight: FontWeight.bold,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
 
-                ]),
-                TableRow(children: [
+                        ]),
+                        TableRow(children: [
 
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Homens" ,
-                      style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(aulas[index].adultosHomens.toString() ,
-                        style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Homens" ,
+                              style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(aulas[index].adultosHomens.toString() ,
+                                style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
 
-                ],
+                        ],
+                        ),
+                        TableRow(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Mulheres" ,
+                              style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(aulas[index].adultosMulheres.toString() ,
+                                style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
+
+                        ]),
+                        TableRow(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Jovens" ,
+                              style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(aulas[index].jovens.toString() ,
+                                style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
+
+                        ]),
+                        TableRow(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Adolescentes" ,
+                              style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(aulas[index].adolescentes.toString() ,
+                                style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
+
+                        ]),
+                        TableRow(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Crianças" ,
+                              style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(aulas[index].criancas.toString() ,
+                                style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
+
+                        ]),
+                        TableRow(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Visitantes" ,
+                              style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(aulas[index].visitantes.toString() ,
+                                style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
+
+                        ]),
+                        TableRow(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Total" ,
+                              style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(aulas[index].total.toString() ,
+                                style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
+
+                        ]),
+                        TableRow(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Oferta" ,
+                              style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text("R\$ "+aulas[index].oferta.toString() ,
+                                style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
+                              ),
+                            ),
+                          ),
+
+                        ]),
+                      ],
+                    ),
+                  ],
                 ),
-                TableRow(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Mulheres" ,
-                      style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(aulas[index].adultosMulheres.toString() ,
-                        style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
-
-                ]),
-                TableRow(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Jovens" ,
-                      style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(aulas[index].jovens.toString() ,
-                        style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
-
-                ]),
-                TableRow(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Adolescentes" ,
-                      style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(aulas[index].adolescentes.toString() ,
-                        style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
-
-                ]),
-                TableRow(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Crianças" ,
-                      style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(aulas[index].criancas.toString() ,
-                        style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
-
-                ]),
-                TableRow(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Visitantes" ,
-                      style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(aulas[index].visitantes.toString() ,
-                        style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
-
-                ]),
-                TableRow(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Total" ,
-                      style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(aulas[index].total.toString() ,
-                        style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
-
-                ]),
-                TableRow(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Oferta" ,
-                      style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text("R\$ "+aulas[index].oferta.toString() ,
-                        style: TextStyle(fontSize: 18.0,color: PadraoCores.texto_2),
-                      ),
-                    ),
-                  ),
-
-                ]),
-              ],
+              ),
             ),
           ),
         ),
       ),
       onTap: (){
         _showOptions(context, index);
+      },
+      onLongPress: (){
+        ShareFilesAndScreenshotWidgets().shareScreenshot(previewContainer, originalSize,"Title",
+            "Name.png",
+            "image/png",
+            text: "Chamada EBD ${dataFormatada.format(aulas[index].data)}!").then((value){
+          if(value!=null){
+            setState(() {
+              image=value;
+
+            });
+          }
+        });
+            
+
       },
     );
   }
@@ -416,21 +472,59 @@ class _AulasPageState extends State<AulasPage> {
 
   }
 
-  void _orderList(OrderOptions result){
-    switch(result){
-      case OrderOptions.orderaz:
-        aulas.sort((a, b) {
-          return a.data.compareTo(b.data);
-        });
-        break;
-      case OrderOptions.orderza:
-        aulas.sort((a, b) {
-          return b.data.compareTo(a.data);
-        });
-        break;
+  void _orderList(String result){
+    if(result=="a-z"){
+      ordenacao="a-z";
     }
-    
+    else{
+      ordenacao="z-a";
+    }
+    setState(() {
+
+    });
+  }
+
+  ordenarListaAz(){
+    aulas.sort((a, b) {
+
+              return a.data.millisecondsSinceEpoch.compareTo(b.data.millisecondsSinceEpoch);
+            });
 
   }
+
+  ordenarListaZa(){
+    aulas.sort((a, b) {
+
+    return b.data.millisecondsSinceEpoch.compareTo(a.data.millisecondsSinceEpoch);
+    });
+
+  }
+
+  // void _orderList(OrderOptions result){
+  //
+  //   var aulas=BoxesAulas.getTransactions().listenable() as List<Aula>;
+  //
+  //   print(result);
+  //   switch(result){
+  //     case OrderOptions.orderaz:
+  //       aulas.sort((a, b) {
+  //         print(a.data.millisecondsSinceEpoch.compareTo(b.data.millisecondsSinceEpoch));
+  //         return a.data.millisecondsSinceEpoch.compareTo(b.data.millisecondsSinceEpoch);
+  //       });
+  //       break;
+  //     case OrderOptions.orderza:
+  //       aulas.sort((a, b) {
+  //         print(b.data.millisecondsSinceEpoch.compareTo(a.data.millisecondsSinceEpoch));
+  //         return b.data.millisecondsSinceEpoch.compareTo(a.data.millisecondsSinceEpoch);
+  //       });
+  //       break;
+  //   }
+  //
+  //   setState(() {
+  //
+  //
+  //   });
+  //
+  // }
 
 }

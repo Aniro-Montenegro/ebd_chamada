@@ -1,4 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:ebd_chamada/modelos/boxes-igreja.dart';
+import 'package:ebd_chamada/modelos/igreja.dart';
 import 'package:ebd_chamada/paginas/home-page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,10 @@ import 'modelos/aula.dart';
 
 
 
+
 void main() async {
+
+
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -20,6 +25,11 @@ void main() async {
 
   Hive.registerAdapter(AulaAdapter());
   await Hive.openBox<Aula>('aulas');
+  Hive.registerAdapter(IgrejaAdapter());
+  await Hive.openBox<Igreja>('igrejas');
+
+
+
 
   runApp(
 

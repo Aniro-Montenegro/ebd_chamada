@@ -1,10 +1,12 @@
 
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:ebd_chamada/config/padrao-cores.dart';
 import 'package:ebd_chamada/modelos/aula.dart';
 import 'package:ebd_chamada/modelos/boxes-aulas.dart';
 import 'package:ebd_chamada/widgets/calendario.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ChamadaPage extends StatefulWidget {
@@ -39,6 +41,70 @@ class _ChamadaPageState extends State<ChamadaPage> {
         selectedDate = selected;
         editedAula.data=selectedDate;
       });
+  }
+
+
+  TextEditingController ageController = new TextEditingController();
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          ageController.text="";
+          return AlertDialog(
+
+            backgroundColor: PadraoCores.gradiente1_2,
+
+
+
+            title: Text('Oferta',style: TextStyle(color: PadraoCores.texto_1),),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                editedAula.oferta=double.parse(value);
+                });
+              },
+              controller: ageController,
+              decoration: InputDecoration(
+                focusColor: PadraoCores.texto_1,
+                fillColor:PadraoCores.texto_1,
+                hoverColor: PadraoCores.texto_1,
+
+
+              ),
+              cursorColor: PadraoCores.texto_1,
+              style: TextStyle(color:PadraoCores.texto_1, ),
+              keyboardType: TextInputType.number,
+             autofocus: true,
+              showCursor: true,
+
+            ),
+            actions: <Widget>[
+              // ignore: deprecated_member_use
+              FlatButton(
+                //color: Colors.red,
+                //textColor: Colors.white,
+                child: Text('Sair',style: TextStyle(color: PadraoCores.texto_1),),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              // ignore: deprecated_member_use
+              FlatButton(
+                //color: Colors.green,
+                //textColor: Colors.white,
+                child: Text('Gravar',style: TextStyle(color: PadraoCores.texto_1),),
+                onPressed: () {
+                  setState(() {
+
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
 
@@ -144,7 +210,7 @@ class _ChamadaPageState extends State<ChamadaPage> {
                                 trailing:  GestureDetector(child: Icon(Icons.add, color: PadraoCores.texto_1,size: 25,),onTap: (){
                                   setState(() {
                                     editedAula.adultosHomens+=1;
-                                    editedAula.total+-1;
+                                    editedAula.total+=1;
                                   });
                                 },),
                                 leading: Text(editedAula.adultosHomens.toString(),style: TextStyle(
@@ -190,7 +256,7 @@ class _ChamadaPageState extends State<ChamadaPage> {
                                 trailing:  GestureDetector(child: Icon(Icons.add, color: PadraoCores.texto_1,size: 25,),onTap: (){
                                   setState(() {
                                     editedAula.adultosMulheres+=1;
-                                    editedAula.total+-1;
+                                    editedAula.total+=1;
                                   });
                                 },),
                                 leading: Text(editedAula.adultosMulheres.toString(),style: TextStyle(
@@ -236,7 +302,7 @@ class _ChamadaPageState extends State<ChamadaPage> {
                                 trailing:  GestureDetector(child: Icon(Icons.add, color: PadraoCores.texto_1,size: 25,),onTap: (){
                                   setState(() {
                                     editedAula.jovens+=1;
-                                    editedAula.total+-1;
+                                    editedAula.total+=1;
                                   });
                                 },),
                                 leading: Text(editedAula.jovens.toString(),style: TextStyle(
@@ -282,7 +348,7 @@ class _ChamadaPageState extends State<ChamadaPage> {
                                 trailing:  GestureDetector(child: Icon(Icons.add, color: PadraoCores.texto_1,size: 25,),onTap: (){
                                   setState(() {
                                     editedAula.adolescentes+=1;
-                                    editedAula.total+-1;
+                                    editedAula.total+=1;
                                   });
                                 },),
                                 leading: Text(editedAula.adolescentes.toString(),style: TextStyle(
@@ -328,7 +394,7 @@ class _ChamadaPageState extends State<ChamadaPage> {
                                 trailing:  GestureDetector(child: Icon(Icons.add, color: PadraoCores.texto_1,size: 25,),onTap: (){
                                   setState(() {
                                     editedAula.criancas+=1;
-                                    editedAula.total+-1;
+                                    editedAula.total+=1;
                                   });
                                 },),
                                 leading: Text(editedAula.criancas.toString(),style: TextStyle(
@@ -374,7 +440,7 @@ class _ChamadaPageState extends State<ChamadaPage> {
                                 trailing:  GestureDetector(child: Icon(Icons.add, color: PadraoCores.texto_1,size: 25,),onTap: (){
                                   setState(() {
                                     editedAula.visitantes+=1;
-                                    editedAula.total+-1;
+                                    editedAula.total+=1;
                                   });
                                 },),
                                 leading: Text(editedAula.visitantes.toString(),style: TextStyle(
@@ -407,44 +473,52 @@ class _ChamadaPageState extends State<ChamadaPage> {
                 StaggeredGridTile.count(
                     crossAxisCellCount: 4,
                     mainAxisCellCount: 4,
-                    child: Card(
-                        color: PadraoCores.cards_1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: ListTile(
+                    child: GestureDetector(
+                      child: Card(
+                          color: PadraoCores.cards_1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: ListTile(
 
-                                trailing:  Icon(Icons.add, color: PadraoCores.texto_1,size: 25,),
-                                leading: Text("R\$ "+editedAula.oferta.toString(),style: TextStyle(
+                                  trailing:  Icon(Icons.add, color: PadraoCores.texto_1,size: 25,),
+                                  leading: Text("R\$ "+editedAula.oferta.toString(),style: TextStyle(
+                                      color: PadraoCores.texto_1,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),),
+                                ),
+                              ),
+                              Text(
+                                "Oferta",
+                                style: TextStyle(
                                     color: PadraoCores.texto_1,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20),),
+                                    fontSize: 20),
                               ),
-                            ),
-                            Text(
-                              "Oferta",
-                              style: TextStyle(
-                                  color: PadraoCores.texto_1,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
-                              child: ListTile(
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: ListTile(
 
-                                leading:  Icon(Icons.remove, color: PadraoCores.texto_1,size: 25,),
+                                  leading:  Icon(Icons.remove, color: PadraoCores.texto_1,size: 25,),
+                                ),
                               ),
-                            ),
 
-                          ],
-                        ))),
+                            ],
+                          )),
+
+                   onTap: (){
+                     _displayTextInputDialog(context);
+                   },
+
+                    )),
 
               ],
             ),
           ),
         ));
   }
+
 }
