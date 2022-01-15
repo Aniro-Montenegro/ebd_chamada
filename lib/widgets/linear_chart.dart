@@ -88,7 +88,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   @override
   Widget build(BuildContext context) => LineChart(
+
     LineChartData(
+
 
       minX: 0,
       maxX: double.parse(tamLista.toString()),

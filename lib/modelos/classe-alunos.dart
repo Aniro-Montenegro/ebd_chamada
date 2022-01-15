@@ -3,8 +3,10 @@
 
 import 'package:hive/hive.dart';
 
+part 'classe-alunos.g.dart';
+
 @HiveType(typeId:2)
-class Aula extends HiveObject{
+class ClasseAlunos extends HiveObject{
 
 
   @HiveField(0)
@@ -14,8 +16,22 @@ class Aula extends HiveObject{
   late String nome_classe;
 
   @HiveField(2)
-  late String quantidade_alunos;
+  late int quantidade_alunos;
 
 
+  static buildClasse(){
+    ClasseAlunos classe = ClasseAlunos();
 
+    classe.nome_classe="";
+    classe.quantidade_alunos=0;
+    classe.id_classe=DateTime.now().millisecondsSinceEpoch~/30;
+
+    return classe;
+
+  }
+
+  @override
+  String toString() {
+    return 'ClasseAlunos{id_classe: $id_classe, nome_classe: $nome_classe, quantidade_alunos: $quantidade_alunos}';
+  }
 }

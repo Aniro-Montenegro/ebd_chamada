@@ -6,6 +6,7 @@ import 'package:ebd_chamada/modelos/boxes-igreja.dart';
 import 'package:ebd_chamada/modelos/igreja.dart';
 import 'package:ebd_chamada/paginas/AulasPage.dart';
 import 'package:ebd_chamada/paginas/ChamadaPage.dart';
+import 'package:ebd_chamada/paginas/ClassesPage.dart';
 import 'package:ebd_chamada/paginas/estatisticas.dart';
 import 'package:ebd_chamada/widgets/clippers.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,10 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(builder: (context) => ChamadaPage(aula: aula,))
     );
 
-    addAula(aula);
+    print("Nova aula"+aula.toString());
+    if(aula.total>0){
+      addAula(aula);
+    }
 
   }
 
@@ -87,103 +91,17 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
           backgroundColor: PadraoCores.gradiente1_1,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: StaggeredGrid.count(
-              crossAxisCount: 4,
-              mainAxisSpacing: 6,
-              crossAxisSpacing: 6,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: StaggeredGrid.count(
+                crossAxisCount: 4,
+                mainAxisSpacing: 6,
+                crossAxisSpacing: 6,
 
-              children: [
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 4,
-                  mainAxisCellCount: 2,
-                  child: GestureDetector(
-                    child: Card(
-                        color: PadraoCores.cards_1,
-                        shape:RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.white70, width: 1),
-                          borderRadius: BorderRadius.circular(10),),
-                        elevation: 5.0,
-                        child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text(
-                                igreja.nomeIgreja,
-                                style: TextStyle(
-                                    color: PadraoCores.texto_1,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                            ))),
-                    onTap: (){
-
-                      _displayNomeIgreja(context);
-
-                    },
-
-
-                  ),
-
-
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 2,
-                  child: GestureDetector(
-                    child: Card(
-                        color: PadraoCores.cards_1,
-                        shape:RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.white70, width: 1),
-                          borderRadius: BorderRadius.circular(10),),
-                        elevation: 5.0,
-                        child: Center(
-                            child: Text(
-                              "Aulas",
-                              style: TextStyle(
-                                  color: PadraoCores.texto_1,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ))),
-                    onTap: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AulasPage()),
-                      );
-                    },
-
-
-                  ),
-
-
-                ),
-
-                StaggeredGridTile.count(
-                    crossAxisCellCount: 2,
-                    mainAxisCellCount: 2,
-                    child: GestureDetector(
-                      child: Card(
-                          color: PadraoCores.cards_1,
-                          shape:RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.white70, width: 1),
-                            borderRadius: BorderRadius.circular(10),),
-                          elevation: 5.0,
-                          child: Center(
-                              child: Text("Chamada",
-                                  style: TextStyle(
-                                      color: PadraoCores.texto_1,
-
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20)))),
-                    onTap: (){
-
-
-                      _novaAula();
-                    },
-                    )),
-                StaggeredGridTile.count(
+                children: [
+                  StaggeredGridTile.count(
                     crossAxisCellCount: 4,
                     mainAxisCellCount: 2,
                     child: GestureDetector(
@@ -194,7 +112,119 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(10),),
                           elevation: 5.0,
                           child: Center(
-                              child: Text("Estatísticas",
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  igreja.nomeIgreja,
+                                  style: TextStyle(
+                                      color: PadraoCores.texto_1,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                              ))),
+                      onTap: (){
+
+                        _displayNomeIgreja(context);
+
+                      },
+
+
+                    ),
+
+
+                  ),
+                  StaggeredGridTile.count(
+                    crossAxisCellCount: 2,
+                    mainAxisCellCount: 2,
+                    child: GestureDetector(
+                      child: Card(
+                          color: PadraoCores.cards_1,
+                          shape:RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(10),),
+                          elevation: 5.0,
+                          child: Center(
+                              child: Text(
+                                "Aulas",
+                                style: TextStyle(
+                                    color: PadraoCores.texto_1,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                              ))),
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AulasPage()),
+                        );
+                      },
+
+
+                    ),
+
+
+                  ),
+
+                  StaggeredGridTile.count(
+                      crossAxisCellCount: 2,
+                      mainAxisCellCount: 2,
+                      child: GestureDetector(
+                        child: Card(
+                            color: PadraoCores.cards_1,
+                            shape:RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(10),),
+                            elevation: 5.0,
+                            child: Center(
+                                child: Text("Chamada",
+                                    style: TextStyle(
+                                        color: PadraoCores.texto_1,
+
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20)))),
+                      onTap: (){
+
+
+                        _novaAula();
+                      },
+                      )),
+                  StaggeredGridTile.count(
+                      crossAxisCellCount: 2,
+                      mainAxisCellCount: 2,
+                      child: GestureDetector(
+                        child: Card(
+                            color: PadraoCores.cards_1,
+                            shape:RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(10),),
+                            elevation: 5.0,
+                            child: Center(
+                                child: Text("Estatísticas",
+                                    style: TextStyle(
+                                        color: PadraoCores.texto_1,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20)))),
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EstatisticasPage()),
+                          );
+                        },
+                      ),
+                  ),
+                  StaggeredGridTile.count(
+                    crossAxisCellCount: 2,
+                    mainAxisCellCount: 2,
+                    child: GestureDetector(
+                      child: Card(
+                          color: PadraoCores.cards_1,
+                          shape:RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(10),),
+                          elevation: 5.0,
+                          child: Center(
+                              child: Text("Classes",
                                   style: TextStyle(
                                       color: PadraoCores.texto_1,
                                       fontWeight: FontWeight.bold,
@@ -203,13 +233,15 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EstatisticasPage()),
+                              builder: (context) => ClassesPage()),
                         );
                       },
                     ),
-                ),
+                  ),
 
-              ],
+
+                ],
+              ),
             ),
           ),
         ));
