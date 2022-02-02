@@ -70,17 +70,41 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       tamLista=3;
     }
     else{
-      for(int x=0;x<aulas.length;x++){
-        var s= FlSpot(double.parse(x.toString()), double.parse(aulas[x].total.toString()));
-        setState(() {
-          spots.add(s);
 
-          datas.add(dataFormatada2.format(aulas[x].data));
-        });
-        aulas[x].total>=tam? tam=aulas[x].total: tam=tam;
+      if(aulas.length==1){
+        var s= FlSpot(0.0, 0.0);
+        spots.add(s);
+        datas.add(dataFormatada2.format(aulas[0].data.add(Duration(days: -7))));
+        for(int x=0;x<aulas.length;x++){
+          var s= FlSpot(double.parse(x.toString())+1, double.parse(aulas[x].total.toString()));
+          setState(() {
+            spots.add(s);
+            print("s");
+
+            datas.add(dataFormatada2.format(aulas[x].data));
+          });
+          aulas[x].total>=tam? tam=aulas[x].total: tam=tam;
+        }
+        tamLista=1;
+
       }
-      tamLista=aulas.length-1;
-      print(tamLista);
+      else{
+        for(int x=0;x<aulas.length;x++){
+          var s= FlSpot(double.parse(x.toString()), double.parse(aulas[x].total.toString()));
+          setState(() {
+            spots.add(s);
+            print("s");
+
+            datas.add(dataFormatada2.format(aulas[x].data));
+          });
+          aulas[x].total>=tam? tam=aulas[x].total: tam=tam;
+        }
+        print("Tamanho da lista"+aulas.length.toString());
+        tamLista=aulas.length;
+        tamLista-=1;
+      }
+
+
     }
 
     super.initState();

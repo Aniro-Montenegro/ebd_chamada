@@ -1,6 +1,6 @@
 
 
-import 'package:ebd_chamada/modelos/classe-alunos.dart';
+
 import 'package:hive/hive.dart';
 
 part 'aula.g.dart';

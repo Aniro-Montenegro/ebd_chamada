@@ -247,6 +247,7 @@ setState(() {
         body: SingleChildScrollView(
           child: Column(
 
+
             children: [
 
               Row(
@@ -341,6 +342,8 @@ setState(() {
               ),
 
               GridView.builder(
+                physics: ScrollPhysics(),
+
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 4.0,
@@ -348,6 +351,7 @@ setState(() {
                     childAspectRatio: 0.95,
                   ),
                   itemCount: classes.length,
+                  scrollDirection: Axis.vertical,
                   itemBuilder: (context,index){
                     return Card(
                         color: PadraoCores.cards_1,
@@ -416,8 +420,13 @@ setState(() {
               ),
             ],
           ),
-        ));
+        )
+
+    );
+
   }
+
+ 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
         context: context,

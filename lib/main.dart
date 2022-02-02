@@ -1,9 +1,12 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:ebd_chamada/modelos/classe-aula.dart';
 import 'package:ebd_chamada/modelos/igreja.dart';
 import 'package:ebd_chamada/paginas/home-page.dart';
+
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:page_transition/page_transition.dart';
 
 import 'config/padrao-cores.dart';
@@ -28,6 +31,8 @@ void main() async {
   await Hive.openBox<Igreja>('igrejas');
   Hive.registerAdapter(ClasseAlunosAdapter());
   await Hive.openBox<ClasseAlunos>('classes');
+  Hive.registerAdapter(ClasseAulaAdapter());
+  await Hive.openBox<ClasseAula>('classes-aula');
 
 
 
@@ -48,6 +53,7 @@ void main() async {
           home: AnimatedSplashScreen(
             splash: 'imagens/splash.png',
             splashIconSize: 1000.0,
+
            nextScreen: HomePage(),
            //nextScreen: EditClassePage(classe: classe,),
             backgroundColor: PadraoCores.splascreen,

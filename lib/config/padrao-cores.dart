@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
 class PadraoCores {
 
 
@@ -16,6 +17,14 @@ class PadraoCores {
   static Color cards_1 = Color(0xFF404D63);
   static Color cards_2 = Color(0xFF687EA3);
   static Color cards_3 = Color(0xFF7188B0);
+
+
+  static PdfColor gradiente1PDF = PdfColor.fromInt(0xFF272f3d);
+  static PdfColor gradiente1_1PDF = PdfColor.fromInt(0xFF404D63);
+  static PdfColor texto_1PDF = PdfColor.fromInt(0xFFfcb206);
+  static PdfColor texto_2PDF = PdfColor.fromInt(0xFFFDC951);
+  static PdfColor cards_2PDF = PdfColor.fromInt(0xFF687EA3);
+  static PdfColor cards_3PDF = PdfColor.fromInt(0xFF7188B0);
 
 
 
